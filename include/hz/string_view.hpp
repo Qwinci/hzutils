@@ -92,9 +92,69 @@ namespace hz {
 			return npos;
 		}
 
+		template<typename Comp> requires requires(Comp comp, T c) {
+			static_cast<bool>(comp(c));
+		}
+		[[nodiscard]] constexpr size_t find(Comp comp, size_t start = 0) const {
+			for (size_t i = start; i < _size; ++i) {
+				if (comp(_data[i])) {
+					return i;
+				}
+			}
+			return npos;
+		}
+
+		[[nodiscard]] constexpr size_t count(T value, size_t start = 0) const {
+			size_t offset = start;
+			size_t count = 0;
+			for (;; ++count) {
+				offset = find(value, offset);
+				if (offset == npos) {
+					return count;
+				}
+				else {
+					++offset;
+				}
+			}
+		}
+
+		[[nodiscard]] constexpr size_t count(basic_string_view str, size_t start = 0) const {
+			size_t offset = start;
+			size_t count = 0;
+			for (;; ++count) {
+				offset = find(str, offset);
+				if (offset == npos) {
+					return count;
+				}
+			}
+		}
+
+		template<typename Comp> requires requires(Comp comp, T c) {
+			static_cast<bool>(comp(c));
+		}
+		[[nodiscard]] constexpr size_t count(Comp comp, size_t start = 0) const {
+			size_t offset = start;
+			size_t count = 0;
+			for (;; ++count) {
+				offset = find(comp, offset);
+				if (offset == npos) {
+					return count;
+				}
+			}
+		}
+
 		[[nodiscard]] constexpr size_t find_first_of(basic_string_view characters, size_t start = 0) const {
 			for (size_t i = start; i < _size; ++i) {
 				if (characters.find(_data[i]) != npos) {
+					return i;
+				}
+			}
+			return npos;
+		}
+
+		[[nodiscard]] constexpr size_t find_first_not_of(basic_string_view characters, size_t start = 0) const {
+			for (size_t i = start; i < _size; ++i) {
+				if (characters.find(_data[i]) == npos) {
 					return i;
 				}
 			}
@@ -126,11 +186,11 @@ namespace hz {
 
 		[[nodiscard]] constexpr basic_string_view substr_abs(size_t start = 0, size_t end = npos) const {
 			size_t count;
-			if (start >= _size || end > _size) {
+			if (start >= _size) {
 				return {"", 0};
 			}
 			else if (end == npos || end > _size) {
-				count = _size;
+				count = _size - start;
 			}
 			else {
 				count = end - start;
@@ -199,6 +259,7 @@ namespace hz {
 	};
 
 	using string_view = basic_string_view<char>;
+	using wstring_view = basic_string_view<wchar_t>;
 
 	namespace literals {
 		constexpr string_view operator ""_view(const char* str) {

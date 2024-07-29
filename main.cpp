@@ -360,9 +360,9 @@ TEST(Basic, Map) {
 
 TEST(Basic, StringUtils) {
 	size_t count;
-	EXPECT_EQ(hz::to_integer<int>("1234"_view, count), 1234);
+	EXPECT_EQ(hz::to_integer<int>("1234"_view, 10, &count), 1234);
 	EXPECT_EQ(count, 4);
-	EXPECT_EQ(hz::to_integer<int>("123a"_view, count), 123);
+	EXPECT_EQ(hz::to_integer<int>("123a"_view, 10, &count), 123);
 	EXPECT_EQ(count, 3);
 }
 

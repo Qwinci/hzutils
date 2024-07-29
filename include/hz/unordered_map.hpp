@@ -55,8 +55,10 @@ namespace hz {
 			while (true) {
 				auto& bucket = table[bucket_index];
 				if (!bucket.has_value() || bucket->key == key) {
+					if (!bucket.has_value()) {
+						++used;
+					}
 					bucket = Slot {.key {std::move(key)}, .value {value}};
-					++used;
 					return;
 				}
 				bucket_index = (bucket_index + 1) % table_size;
@@ -109,10 +111,10 @@ namespace hz {
 			while (true) {
 				auto& bucket = table[bucket_index];
 				if (!bucket.has_value() || bucket->key == key) {
-					bucket = Slot {.key {std::move(key)}, .value {std::move(value)}};
 					if (!bucket.has_value()) {
 						++used;
 					}
+					bucket = Slot {.key {std::move(key)}, .value {std::move(value)}};
 					return;
 				}
 				bucket_index = (bucket_index + 1) % table_size;

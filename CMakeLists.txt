@@ -18,7 +18,7 @@ add_library(hzutils INTERFACE)
 target_include_directories(hzutils INTERFACE include)
 
 add_executable(hzutils_test main.cpp)
-target_compile_options(hzutils_test PRIVATE -fsanitize=undefined,address -fconcepts-diagnostics-depth=2)
+target_compile_options(hzutils_test PRIVATE -fsanitize=undefined,address)
 target_link_libraries(hzutils_test PRIVATE GTest::gtest_main hzutils)
 target_link_options(hzutils_test PRIVATE -fsanitize=undefined,address)
 

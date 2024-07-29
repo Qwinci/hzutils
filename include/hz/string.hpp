@@ -101,6 +101,18 @@ namespace hz {
 			return *this;
 		}
 
+		constexpr basic_string& prepend(basic_string_view<T> str) {
+			auto old_size = _size;
+			resize(old_size + str.size());
+			for (size_t i = old_size; i > 0; --i) {
+				_data[str.size() + i - 1] = _data[i - 1];
+			}
+			for (size_t i = 0; i < str.size(); ++i) {
+				_data[i] = str[i];
+			}
+			return *this;
+		}
+
 		constexpr ~basic_string() {
 			if (_data) {
 				dealloc(_data, (cap + 1) * sizeof(T));
@@ -209,6 +221,7 @@ namespace hz {
 		constexpr void resize(size_t count) {
 			if (count <= _size) {
 				_size = count;
+				_data[_size] = 0;
 			}
 			else {
 				size_t amount = count - _size;

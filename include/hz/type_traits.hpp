@@ -135,4 +135,16 @@ namespace hz {
 
 	template<typename T>
 	inline constexpr bool is_pointer_v = is_pointer<T>::value;
+
+	template<typename T>
+	struct is_trivially_copyable : bool_constant<__is_trivially_copyable(T)> {};
+
+	template<typename T>
+	inline constexpr bool is_trivially_copyable_v = is_trivially_copyable<T>::value;
+
+	template<typename T>
+	struct is_signed : bool_constant<T(-1) < T(0)> {};
+
+	template<typename T>
+	inline constexpr bool is_signed_v = is_signed<T>::value;
 }

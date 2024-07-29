@@ -384,7 +384,8 @@ namespace hz {
 		ArenaAllocator arena_alloc;
 		spinlock<rb_tree<AllocInfo, &AllocInfo::tree_hook>> allocations {};
 		spinlock<list<Arena, &Arena::hook>> free_small_arenas[Config::SMALL_SLABS.size()] {};
-		spinlock<list<Arena, &Arena::hook>> free_pow2_arenas[popcount(Config::POW2_SLABS_END - Config::POW2_SLABS_BEGIN)] {};
+		spinlock<list<Arena, &Arena::hook>> free_pow2_arenas[
+			popcount(Config::POW2_SLABS_END - Config::POW2_SLABS_BEGIN) + 1] {};
 		spinlock<list<MetadataPage, &MetadataPage::hook>> free_metadatas {};
 	};
 }
