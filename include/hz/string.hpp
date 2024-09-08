@@ -48,6 +48,10 @@ namespace hz {
 			_data[_size] = 0;
 		}
 
+		static constexpr basic_string null(Allocator alloc) {
+			return {Null {}, alloc};
+		}
+
 		constexpr basic_string& operator=(basic_string&& other) noexcept {
 			if (_data) {
 				dealloc(_data, (cap + 1) * sizeof(T));
@@ -305,6 +309,10 @@ namespace hz {
 		}
 
 	private:
+		struct Null {};
+
+		constexpr basic_string(Null, Allocator alloc) : _data {}, alloc {alloc} {}
+
 		void ensure_space(size_t amount) {
 			if (_size + amount <= cap) {
 				return;
