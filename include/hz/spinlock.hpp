@@ -100,6 +100,11 @@ namespace hz {
 		};
 
 		[[nodiscard]] guard lock() {
+			manual_lock();
+			return guard {this};
+		}
+
+		void manual_lock() {
 			while (true) {
 				if (!_lock.exchange(true, memory_order::acquire)) {
 					break;
@@ -112,7 +117,13 @@ namespace hz {
 #endif
 				}
 			}
-			return guard {this};
+		}
+
+		void manual_unlock() {
+			_lock.store(false, memory_order::release);
+#ifdef __aarch64__
+			asm volatile("sev");
+#endif
 		}
 
 	private:

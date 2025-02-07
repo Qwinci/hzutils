@@ -2,7 +2,7 @@
 #include <hz/string_view.hpp>
 #include <hz/manually_destroy.hpp>
 #include <hz/manually_init.hpp>
-#include <hz/double_list.hpp>
+#include <hz/list.hpp>
 #include <hz/spinlock.hpp>
 #include <hz/atomic.hpp>
 #include <hz/bit.hpp>

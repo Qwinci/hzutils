@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 #include "hash.hpp"
+#include "type_traits.hpp"
 
 namespace hz {
 	template<typename T = char>
@@ -187,7 +188,7 @@ namespace hz {
 		[[nodiscard]] constexpr basic_string_view substr_abs(size_t start = 0, size_t end = npos) const {
 			size_t count;
 			if (start >= _size) {
-				return {"", 0};
+				return {nullptr, 0};
 			}
 			else if (end == npos || end > _size) {
 				count = _size - start;
@@ -260,19 +261,14 @@ namespace hz {
 
 	using string_view = basic_string_view<char>;
 	using wstring_view = basic_string_view<wchar_t>;
+	using u16string_view = basic_string_view<char16_t>;
 
 	namespace literals {
 		constexpr string_view operator ""_view(const char* str) {
 			return {str};
 		}
 
-#if UINTPTR_MAX == UINT64_MAX
-		using __size_type = unsigned long;
-#else
-		using __size_type = unsigned int;
-#endif
-
-		constexpr string_view operator ""_view(const char* str, __size_type size) {
+		constexpr string_view operator ""_view(const char* str, size_t size) {
 			return {str, size};
 		}
 	}

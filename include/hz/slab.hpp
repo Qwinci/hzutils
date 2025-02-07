@@ -4,7 +4,7 @@
 #include "array.hpp"
 #include "allocator.hpp"
 #include "rb_tree.hpp"
-#include "double_list.hpp"
+#include "list.hpp"
 #include "spinlock.hpp"
 #include "pair.hpp"
 #include "bit.hpp"

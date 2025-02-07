@@ -17,3 +17,10 @@ namespace std {
 		return static_cast<hz::remove_reference_t<__T>&&>(__value);
 	}
 }
+
+namespace hz {
+	template<typename T>
+	constexpr underlying_type_t<T> to_underlying(T value) {
+		return static_cast<underlying_type_t<T>>(value);
+	}
+}

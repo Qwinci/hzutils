@@ -36,6 +36,22 @@ namespace hz {
 			return __data + N;
 		}
 
+		constexpr T& front() {
+			return __data[0];
+		}
+
+		constexpr const T& front() const {
+			return __data[0];
+		}
+
+		constexpr T& back() {
+			return __data[N - 1];
+		}
+
+		constexpr const T& back() const {
+			return __data[N - 1];
+		}
+
 		[[nodiscard]] constexpr size_t size() const {
 			return N;
 		}

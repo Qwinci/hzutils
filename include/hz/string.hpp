@@ -4,8 +4,11 @@
 #include "hash.hpp"
 #if __STDC_HOSTED__ == 1
 #include <utility>
+#include <cstddef>
 #else
 #include "utility.hpp"
+#include "cstddef.hpp"
+
 #endif
 
 namespace hz {
@@ -16,6 +19,8 @@ namespace hz {
 			_data = static_cast<T*>(alloc.allocate(sizeof(T)));
 			_data[0] = 0;
 		}
+
+		constexpr explicit basic_string(std::nullptr_t, Allocator alloc) : alloc {alloc} {}
 
 		constexpr basic_string(basic_string&& other) noexcept
 			: cap {other.cap}, alloc {std::move(other.alloc)} {
@@ -37,7 +42,7 @@ namespace hz {
 			_data[_size] = 0;
 		}
 
-		constexpr basic_string(basic_string_view<T> str, Allocator alloc) : alloc {alloc} {
+		constexpr explicit basic_string(basic_string_view<T> str, Allocator alloc) : alloc {alloc} {
 			_data = static_cast<T*>(alloc.allocate((str.size() + 1) * sizeof(T)));
 			_size = str.size();
 			cap = str.size();
@@ -304,10 +309,6 @@ namespace hz {
 			return as_view() == other.as_view();
 		}
 
-		constexpr bool operator==(basic_string_view<T> str) const {
-			return as_view() == str;
-		}
-
 	private:
 		struct Null {};
 
@@ -343,7 +344,7 @@ namespace hz {
 			}
 		}
 
-		T* _data;
+		T* _data {};
 		size_t _size {};
 		size_t cap {};
 		Allocator alloc;
