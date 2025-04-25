@@ -65,11 +65,25 @@ namespace hz {
 			return __atomic_fetch_add(&value, arg, static_cast<int>(order));
 		}
 
+		T add_fetch(T arg, memory_order order) requires(is_integral_v<T>) {
+			return __atomic_add_fetch(&value, arg, static_cast<int>(order));
+		}
+		T add_fetch(ptrdiff_t arg, memory_order order) requires(is_pointer_v<T>) {
+			return __atomic_add_fetch(&value, arg, static_cast<int>(order));
+		}
+
 		T fetch_sub(T arg, memory_order order) requires(is_integral_v<T>) {
 			return __atomic_fetch_sub(&value, arg, static_cast<int>(order));
 		}
 		T fetch_sub(ptrdiff_t arg, memory_order order) requires(is_pointer_v<T>) {
 			return __atomic_fetch_sub(&value, arg, static_cast<int>(order));
+		}
+
+		T sub_fetch(T arg, memory_order order) requires(is_integral_v<T>) {
+			return __atomic_sub_fetch(&value, arg, static_cast<int>(order));
+		}
+		T sub_fetch(ptrdiff_t arg, memory_order order) requires(is_pointer_v<T>) {
+			return __atomic_sub_fetch(&value, arg, static_cast<int>(order));
 		}
 
 		T fetch_and(T arg, memory_order order) requires(is_integral_v<T>) {

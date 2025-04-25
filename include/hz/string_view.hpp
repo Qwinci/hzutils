@@ -177,7 +177,21 @@ namespace hz {
 
 		[[nodiscard]] constexpr basic_string_view substr(size_t start = 0, size_t count = npos) const {
 			if (start >= _size) {
-				return {"", 0};
+				if constexpr (is_same_v<T, char>) {
+					return {"", 0};
+				}
+				else if constexpr (is_same_v<T, char16_t>) {
+					return {u"", 0};
+				}
+				else if constexpr (is_same_v<T, char32_t>) {
+					return {U"", 0};
+				}
+				else if constexpr (is_same_v<T, wchar_t>) {
+					return {L"", 0};
+				}
+				else {
+					return {nullptr, 0};
+				}
 			}
 			else if (count == npos || count > _size - start) {
 				count = _size - start;

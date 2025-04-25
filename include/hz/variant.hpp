@@ -8,6 +8,7 @@
 #include "utility.hpp"
 #include "new.hpp"
 #endif
+#include <stdint.h>
 
 namespace hz {
 	namespace __detail {
@@ -192,7 +193,7 @@ namespace hz {
 		inline bool copy_from(const variant& other) {
 			constexpr size_t ID = __detail::index_of<T, Types...>::value;
 			if (other.id == ID) {
-				auto* ptr = std::launder(reinterpret_cast<T*>(&other.storage));
+				auto* ptr = std::launder(reinterpret_cast<const T*>(&other.storage));
 				new (storage) T {*ptr};
 				id = ID;
 				return true;

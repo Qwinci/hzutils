@@ -208,8 +208,13 @@ namespace hz {
 			else {
 				size_t amount = count - _size;
 				ensure_space(amount);
-				for (size_t i = 0; i < amount; ++i) {
-					new (&_data[_size++]) T {};
+				if (!hz::is_trivially_constructible_v<T>) {
+					for (size_t i = 0; i < amount; ++i) {
+						new (&_data[_size++]) T {};
+					}
+				}
+				else {
+					_size += amount;
 				}
 			}
 		}
