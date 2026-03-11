@@ -1,5 +1,8 @@
 #pragma once
 
+// This is based on the implementation in Managarm frigg (https://github.com/Managarm/frigg)
+// with modifications to make it iterative and reduce duplication.
+
 namespace hz {
 	struct rb_tree_hook {
 		void* parent;
@@ -192,48 +195,25 @@ namespace hz {
 				T* grandparent = static_cast<T*>((parent->*Hook).parent);
 				hz_assert(grandparent && (grandparent->*Hook).color == 0);
 
-				if ((grandparent->*Hook).child[0] == parent
-				    && is_red(static_cast<T*>((grandparent->*Hook).child[1]))) {
+				bool parent_dir = (grandparent->*Hook).child[1] == parent;
+				if (is_red(static_cast<T*>((grandparent->*Hook).child[!parent_dir]))) {
 					(grandparent->*Hook).color = 1;
 					(parent->*Hook).color = 0;
-					(static_cast<T*>((grandparent->*Hook).child[1])->*Hook).color = 0;
-					node = grandparent;
-					continue;
-				}
-				else if ((grandparent->*Hook).child[1] == parent
-				         && is_red(static_cast<T*>((grandparent->*Hook).child[0]))) {
-					(grandparent->*Hook).color = 1;
-					(parent->*Hook).color = 0;
-					(static_cast<T*>((grandparent->*Hook).child[0])->*Hook).color = 0;
+					(static_cast<T*>((grandparent->*Hook).child[!parent_dir])->*Hook).color = 0;
 					node = grandparent;
 					continue;
 				}
 
-				if ((grandparent->*Hook).child[0] == parent) {
-					if ((parent->*Hook).child[1] == node) {
-						rotate(node, false);
-						rotate(node, true);
-						(node->*Hook).color = 0;
-					}
-					else {
-						rotate(parent, true);
-						(parent->*Hook).color = 0;
-					}
-					(grandparent->*Hook).color = 1;
+				if ((parent->*Hook).child[!parent_dir] == node) {
+					rotate(node, parent_dir);
+					rotate(node, !parent_dir);
+					(node->*Hook).color = 0;
 				}
 				else {
-					hz_assert((grandparent->*Hook).child[1] == parent);
-					if ((parent->*Hook).child[0] == node) {
-						rotate(node, true);
-						rotate(node, false);
-						(node->*Hook).color = 0;
-					}
-					else {
-						rotate(parent, false);
-						(parent->*Hook).color = 0;
-					}
-					(grandparent->*Hook).color = 1;
+					rotate(parent, !parent_dir);
+					(parent->*Hook).color = 0;
 				}
+				(grandparent->*Hook).color = 1;
 
 				return;
 			}
