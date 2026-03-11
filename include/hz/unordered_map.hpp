@@ -140,6 +140,7 @@ namespace hz {
 				auto& bucket = table[bucket_index];
 				if (bucket && bucket.value().key == key) {
 					bucket.reset();
+					--used;
 					return;
 				}
 				bucket_index = (bucket_index + 1) % table_size;
